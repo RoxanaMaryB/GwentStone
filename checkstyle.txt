@@ -1,2 +1,4 @@
 Starting audit...
+[ERROR] D:\Facultate\2_an\2_sem\poo\teme\tema_1\GwentStone\.\src\main\Main.java:10:14: Using the '.*' form of import should be avoided - fileio.*. [AvoidStarImport]
 Audit done.
+Checkstyle ends with 1 errors.
