@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class GameState {
-    private int nrGames;
-    private int nrRound;
-    private boolean gameOver;
+    private int nrGamesSoFar;
+    private int playerOneWins;
+    private int playerTwoWins;
 }

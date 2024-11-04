@@ -1,6 +1,9 @@
 package cards;
 
 import java.util.ArrayList;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.*;
 
 /**
@@ -24,5 +27,17 @@ public class Minion extends Card {
 
     public void defrost() {
         isFrozen = false;
+    }
+
+    public static void outputMinion(Minion minion, ObjectNode outputNode) {
+        outputNode.put("mana", minion.getCardInput().getMana());
+        outputNode.put("attackDamage", minion.getCardInput().getAttackDamage());
+        outputNode.put("health", minion.getCardInput().getHealth());
+        outputNode.put("description", minion.getCardInput().getDescription());
+        ArrayNode colors = outputNode.putArray("colors");
+        for (String color : minion.getCardInput().getColors()) {
+            colors.add(color);
+        }
+        outputNode.put("name", minion.getCardInput().getName());
     }
 }

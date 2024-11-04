@@ -2,8 +2,9 @@ package game.logic;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import commands.Command;
+import commands.CommandFactory;
 import fileio.*;
 import cards.*;
 
@@ -16,17 +17,20 @@ public class Game {
     private ArrayNode output;
     private ObjectMapper objectMapper = new ObjectMapper();
     private GameState gameState = new GameState();
-    private GameUtils gameUtils = new GameUtils();
     private GameTable table;
 
     public void startGame(Input inputData, ArrayNode output, ObjectMapper objectMapper) {
         this.inputData = inputData;
         this.output = output;
         this.objectMapper = objectMapper;
-        gameState.setNrGames(inputData.getGames().size());
+        GameUtils.setNrGames(inputData.getGames().size());
+        GameUtils.setPlayerOneMana(0);
+        GameUtils.setPlayerTwoMana(0);
+
         for(GameInput game : inputData.getGames()) {
-            gameState.setGameOver(false);
-            gameState.setNrRound(0);
+            GameUtils.setGameOver(false);
+            GameUtils.setNrRound(0);
+            GameUtils.setCurrentPlayer(game.getStartGame().getStartingPlayer());
 
             int playerOneDeckIdx = game.getStartGame().getPlayerOneDeckIdx();
             int playerTwoDeckIdx = game.getStartGame().getPlayerTwoDeckIdx();
@@ -34,9 +38,8 @@ public class Game {
             ArrayList<CardInput> playerOneDeck = inputData.getPlayerOneDecks().getDecks().get(playerOneDeckIdx);
             ArrayList<CardInput> playerTwoDeck = inputData.getPlayerTwoDecks().getDecks().get(playerTwoDeckIdx);
 
-            gameUtils.setPlayerOneDeckIdx(playerOneDeckIdx);
-            gameUtils.setPlayerTwoDeckIdx(playerTwoDeckIdx);
-            gameUtils.setShuffleSeed(game.getStartGame().getShuffleSeed());
+            GameUtils.setPlayerOneDeckIdx(playerOneDeckIdx);
+            GameUtils.setPlayerTwoDeckIdx(playerTwoDeckIdx);
 
             table = new GameTable();
             table.setPlayerOneDeck(new Deck(playerOneDeck));
@@ -45,9 +48,23 @@ public class Game {
             table.setPlayerOneHero((Hero)CardFactory.createCard(game.getStartGame().getPlayerOneHero()));
             table.setPlayerTwoHero((Hero)CardFactory.createCard(game.getStartGame().getPlayerTwoHero()));
 
-            gameUtils.setShuffleSeed(game.getStartGame().getShuffleSeed());
-            Collections.shuffle(table.getPlayerOneDeck().getCards(), new Random(gameUtils.getShuffleSeed()));
-            Collections.shuffle(table.getPlayerTwoDeck().getCards(), new Random(gameUtils.getShuffleSeed()));
+            GameUtils.setShuffleSeed(game.getStartGame().getShuffleSeed());
+            Collections.shuffle(table.getPlayerOneDeck().getMinions(), new Random(GameUtils.getShuffleSeed()));
+            Collections.shuffle(table.getPlayerTwoDeck().getMinions(), new Random(GameUtils.getShuffleSeed()));
+
+            table.addMinionToHand(1);
+            table.addMinionToHand(2);
+
+            CommandFactory commandFactory = new CommandFactory();
+            ArrayList<ActionsInput> actions = game.getActions();
+            for (ActionsInput action : actions) {
+                if(GameUtils.isGameOver()) {
+                    continue;
+                }
+                // Command factory
+                Command command = new Command(action, table, output);
+                commandFactory.executeCommand(command);
+            }
         }
     }
 }
