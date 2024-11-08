@@ -7,17 +7,17 @@ import fileio.*;
 public class Hero extends Card{
     public Hero (CardInput cardInput) {
         super(cardInput);
-        cardInput.setHealth(30);
+        this.setHealth(30);
     }
 
     public static void outputHero(Hero hero, ObjectNode outputNode) {
-        outputNode.put("mana", hero.getCardInput().getMana());
-        outputNode.put("description", hero.getCardInput().getDescription());
+        outputNode.put("mana", hero.getMana());
+        outputNode.put("description", hero.getDescription());
         ArrayNode colors = outputNode.putArray("colors");
-        for (String color : hero.getCardInput().getColors()) {
+        for (String color : hero.getColors()) {
             colors.add(color);
         }
-        outputNode.put("name", hero.getCardInput().getName());
-        outputNode.put("health", hero.getCardInput().getHealth());
+        outputNode.put("name", hero.getName());
+        outputNode.put("health", hero.getHealth());
     }
 }

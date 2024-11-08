@@ -30,14 +30,14 @@ public class Minion extends Card {
     }
 
     public static void outputMinion(Minion minion, ObjectNode outputNode) {
-        outputNode.put("mana", minion.getCardInput().getMana());
-        outputNode.put("attackDamage", minion.getCardInput().getAttackDamage());
-        outputNode.put("health", minion.getCardInput().getHealth());
-        outputNode.put("description", minion.getCardInput().getDescription());
+        outputNode.put("mana", minion.getMana());
+        outputNode.put("attackDamage", minion.getAttackDamage());
+        outputNode.put("health", minion.getHealth());
+        outputNode.put("description", minion.getDescription());
         ArrayNode colors = outputNode.putArray("colors");
-        for (String color : minion.getCardInput().getColors()) {
+        for (String color : minion.getColors()) {
             colors.add(color);
         }
-        outputNode.put("name", minion.getCardInput().getName());
+        outputNode.put("name", minion.getName());
     }
 }

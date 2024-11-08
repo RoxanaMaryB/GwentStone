@@ -10,11 +10,22 @@ import java.util.ArrayList;
 
 @Getter @Setter
 public class Card {
-    protected CardInput cardInput;
+    private int mana;
+    private int attackDamage;
+    private int health;
+    private String description;
+    private ArrayList<String> colors;
+    private String name;
 
     protected boolean hasAttacked = false;
 
     public Card(CardInput cardInput) {
-        this.cardInput = cardInput;
+        this.mana = cardInput.getMana();
+        this.attackDamage = cardInput.getAttackDamage();
+        this.health = cardInput.getHealth();
+        this.description = cardInput.getDescription();
+        this.colors = cardInput.getColors();
+        this.name = cardInput.getName();
     }
+
 }
