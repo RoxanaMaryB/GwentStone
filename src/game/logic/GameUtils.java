@@ -1,20 +1,38 @@
 package game.logic;
 
-import fileio.CardInput;
-
-import java.util.ArrayList;
-
 public class GameUtils {
+
     private static int playerOneDeckIdx;
     private static int playerTwoDeckIdx;
     private static int shuffleSeed;
-    private static int playerTurn;
+
     private static int currentPlayer;
+
     private static int nrGames;
-    private static int nrRound;
+    private static int nrGamesSoFar;
+    private static int nrTurn;
     private static boolean gameOver;
+
     private static int playerOneMana;
     private static int playerTwoMana;
+    private static int playerOneWins;
+    private static int playerTwoWins;
+
+    public static void increaseMana(int mana, int playerIdx) {
+        if (playerIdx == 1) {
+            setPlayerOneMana(Math.min(mana, 10) + getPlayerOneMana());
+        } else {
+            setPlayerTwoMana(Math.min(mana, 10) + getPlayerTwoMana());
+        }
+    }
+
+    public static void decreaseMana(int mana, int playerIdx) {
+        if (playerIdx == 1) {
+            setPlayerOneMana(getPlayerOneMana() - mana);
+        } else {
+            setPlayerTwoMana(getPlayerTwoMana() - mana);
+        }
+    }
 
     public static int getPlayerOneDeckIdx() {
         return playerOneDeckIdx;
@@ -40,14 +58,6 @@ public class GameUtils {
         GameUtils.shuffleSeed = shuffleSeed;
     }
 
-    public static int getPlayerTurn() {
-        return playerTurn;
-    }
-
-    public static void setPlayerTurn(int playerTurn) {
-        GameUtils.playerTurn = playerTurn;
-    }
-
     public static int getCurrentPlayer() {
         return currentPlayer;
     }
@@ -64,12 +74,12 @@ public class GameUtils {
         GameUtils.nrGames = nrGames;
     }
 
-    public static int getNrRound() {
-        return nrRound;
+    public static int getNrGamesSoFar() {
+        return nrGamesSoFar;
     }
 
-    public static void setNrRound(int nrRound) {
-        GameUtils.nrRound = nrRound;
+    public static void setNrGamesSoFar(int nrGamesSoFar) {
+        GameUtils.nrGamesSoFar = nrGamesSoFar;
     }
 
     public static boolean isGameOver() {
@@ -78,6 +88,30 @@ public class GameUtils {
 
     public static void setGameOver(boolean gameOver) {
         GameUtils.gameOver = gameOver;
+    }
+
+    public static int getPlayerOneWins() {
+        return playerOneWins;
+    }
+
+    public static void setPlayerOneWins(int playerOneWins) {
+        GameUtils.playerOneWins = playerOneWins;
+    }
+
+    public static int getPlayerTwoWins() {
+        return playerTwoWins;
+    }
+
+    public static void setPlayerTwoWins(int playerTwoWins) {
+        GameUtils.playerTwoWins = playerTwoWins;
+    }
+
+    public static int getNrTurn() {
+        return nrTurn;
+    }
+
+    public static void setNrTurn(int nrTurn) {
+        GameUtils.nrTurn = nrTurn;
     }
 
     public static int getPlayerOneMana() {

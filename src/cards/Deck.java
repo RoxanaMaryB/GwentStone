@@ -17,7 +17,8 @@ public class Deck {
     private ArrayList<Minion> minions = new ArrayList<>();
     public Deck(ArrayList<CardInput> deckInput) {
         for (CardInput cardInput : deckInput) {
-            minions.add(new Minion(cardInput));
+            Card card = CardFactory.createCard(cardInput);
+            minions.add((Minion) card);
         }
     }
 

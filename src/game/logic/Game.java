@@ -16,20 +16,19 @@ public class Game {
     private Input inputData;
     private ArrayNode output;
     private ObjectMapper objectMapper = new ObjectMapper();
-    private GameState gameState = new GameState();
     private GameTable table;
 
     public void startGame(Input inputData, ArrayNode output, ObjectMapper objectMapper) {
+        System.out.println("Starting game...............................");
         this.inputData = inputData;
         this.output = output;
         this.objectMapper = objectMapper;
         GameUtils.setNrGames(inputData.getGames().size());
-        GameUtils.setPlayerOneMana(0);
-        GameUtils.setPlayerTwoMana(0);
+        GameUtils.setNrGamesSoFar(0);
 
         for(GameInput game : inputData.getGames()) {
             GameUtils.setGameOver(false);
-            GameUtils.setNrRound(0);
+            GameUtils.setNrTurn(0);
             GameUtils.setCurrentPlayer(game.getStartGame().getStartingPlayer());
 
             int playerOneDeckIdx = game.getStartGame().getPlayerOneDeckIdx();
@@ -47,6 +46,9 @@ public class Game {
 
             table.setPlayerOneHero((Hero)CardFactory.createCard(game.getStartGame().getPlayerOneHero()));
             table.setPlayerTwoHero((Hero)CardFactory.createCard(game.getStartGame().getPlayerTwoHero()));
+
+            GameUtils.setPlayerOneMana(1);
+            GameUtils.setPlayerTwoMana(1);
 
             GameUtils.setShuffleSeed(game.getStartGame().getShuffleSeed());
             Collections.shuffle(table.getPlayerOneDeck().getMinions(), new Random(GameUtils.getShuffleSeed()));

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 import java.util.ArrayList;
-import fileio.*;
+
 import cards.*;
 
 public class GameTable {
@@ -27,9 +27,6 @@ public class GameTable {
         table = new ArrayList<>(rows);
         for(int i = 0; i < rows; i++) {
             ArrayList<Minion> row = new ArrayList<>(columns);
-            for(int j = 0; j < columns; j++) {
-                row.add(null);
-            }
             table.add(row);
         }
     }
@@ -56,12 +53,39 @@ public class GameTable {
     }
 
     public void addMinionToHand(int playerIdx) {
-        if(playerIdx == 1) {
+        if(playerIdx == 1 && !playerOneDeck.getMinions().isEmpty()) {
             playerOneHand.add(playerOneDeck.getMinions().get(0));
             playerOneDeck.getMinions().remove(0);
-        } else {
+        } else if(playerIdx == 2 && !playerTwoDeck.getMinions().isEmpty()) {
             playerTwoHand.add(playerTwoDeck.getMinions().get(0));
             playerTwoDeck.getMinions().remove(0);
+        }
+    }
+
+    public boolean checkFullRow(int row) {
+        if(table.get(row).size() >= 5)
+            return true;
+        return false;
+    }
+
+    public void defrostMinions(int player) {
+        int playerRow = player == 1 ? 2 : 0; // daca e player 1, defrost r 2 si 3, daca e player 2, defrost r 0 si 1
+        for(int i = playerRow; i <= playerRow + 1; i++) {
+            for(int j = 0; j < table.get(i).size(); j++) {
+                if(table.get(i).get(j) != null) {
+                    table.get(i).get(j).setFrozen(false);
+                }
+            }
+        }
+    }
+
+    public void resetMinions() {
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < table.get(i).size(); j++) {
+                if(table.get(i).get(j) != null) {
+                    table.get(i).get(j).setHasAttacked(false);
+                }
+            }
         }
     }
 
