@@ -17,15 +17,14 @@ import lombok.Setter;
 @Getter @Setter
 public class Minion extends Card {
 
-    protected int attack = 0;
     protected boolean isSpecial = false;
-    protected boolean isFrozen = false;
     protected boolean isTank = false;
+    private boolean isFrozen = false;
     protected int row;
 
     public Minion(CardInput cardInput) {
         super(cardInput);
-        this.attack = cardInput.getAttackDamage();
+        this.setAttackDamage(cardInput.getAttackDamage());
     }
 
     public static void outputMinion(Minion minion, ObjectNode outputNode) {

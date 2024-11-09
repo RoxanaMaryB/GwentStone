@@ -17,7 +17,7 @@ public class Card {
     private ArrayList<String> colors;
     private String name;
 
-    protected boolean hasAttacked = false;
+    private boolean hasAttacked;
 
     public Card(CardInput cardInput) {
         this.mana = cardInput.getMana();
@@ -26,6 +26,7 @@ public class Card {
         this.description = cardInput.getDescription();
         this.colors = cardInput.getColors();
         this.name = cardInput.getName();
+        this.hasAttacked = false;
     }
 
 }

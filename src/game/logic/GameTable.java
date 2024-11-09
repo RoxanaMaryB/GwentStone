@@ -89,6 +89,17 @@ public class GameTable {
         }
     }
 
+    public boolean checkTanksPresent(int player) {
+        int frontRow = player == 1 ? 2 : 1;
+        for(int j = 0; j < table.get(frontRow).size(); j++) {
+            if(table.get(frontRow).get(j) != null && table.get(frontRow).get(j).isTank()) {
+                System.out.println("Tank present " + table.get(frontRow).get(j).getName());
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Deck getPlayerOneDeck() {
         return playerOneDeck;
     }

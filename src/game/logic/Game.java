@@ -60,9 +60,9 @@ public class Game {
             CommandFactory commandFactory = new CommandFactory();
             ArrayList<ActionsInput> actions = game.getActions();
             for (ActionsInput action : actions) {
-                if(GameUtils.isGameOver()) {
-                    continue;
-                }
+//                if(GameUtils.isGameOver()) {
+//                    continue;
+//                }
                 // Command factory
                 Command command = new Command(action, table, output);
                 commandFactory.executeCommand(command);
