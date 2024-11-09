@@ -79,6 +79,17 @@ public class GameTable {
         }
     }
 
+    public void outputFrozen(GameTable table, ArrayNode outputNode) {
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < table.getTable().get(i).size(); j++) {
+                if(table.getTable().get(i).get(j) != null && table.getTable().get(i).get(j).isFrozen()) {
+                    ObjectNode minionNode = outputNode.addObject();
+                    Minion.outputMinion(table.getTable().get(i).get(j), minionNode);
+                }
+            }
+        }
+    }
+
     public void resetMinions() {
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < table.get(i).size(); j++) {

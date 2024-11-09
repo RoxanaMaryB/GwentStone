@@ -19,12 +19,14 @@ public class Game {
     private GameTable table;
 
     public void startGame(Input inputData, ArrayNode output, ObjectMapper objectMapper) {
-        System.out.println("Starting game...............................");
+        System.out.println("Starting game..............................." + GameUtils.getNrGamesSoFar());
         this.inputData = inputData;
         this.output = output;
         this.objectMapper = objectMapper;
         GameUtils.setNrGames(inputData.getGames().size());
         GameUtils.setNrGamesSoFar(0);
+        GameUtils.setPlayerOneWins(0);
+        GameUtils.setPlayerTwoWins(0);
 
         for(GameInput game : inputData.getGames()) {
             GameUtils.setGameOver(false);

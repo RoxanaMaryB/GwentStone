@@ -104,7 +104,7 @@ public class CommandFactory {
                     GameUtils.increaseMana(addedMana, 1);
                     GameUtils.increaseMana(addedMana, 2);
                 }
-                table.defrostMinions(GameUtils.getCurrentPlayer());
+                table.defrostMinions(3 - GameUtils.getCurrentPlayer());
                 table.getPlayerOneHero().setHasAttacked(false);
                 table.getPlayerTwoHero().setHasAttacked(false);
                 table.resetMinions();
@@ -192,7 +192,7 @@ public class CommandFactory {
                 Attacker.setHasAttacked(true);
                 Attacked.setHealth(Math.max(0, Attacked.getHealth() - Attacker.getAttackDamage()));
                 if(Attacked.getHealth() <= 0) {
-                    table.getTable().get(attackerCoordinates.getX()).remove(attackedCoordinates.getY());
+                    table.getTable().get(attackedCoordinates.getX()).remove(attackedCoordinates.getY());
                 }
                 break;
             case "cardUsesAbility":
@@ -257,6 +257,7 @@ public class CommandFactory {
                     break;
                 }
                 Minion HeroAttacker = table.getTable().get(heroAttackercoordinates.getX()).get(heroAttackercoordinates.getY());
+                Hero heroAttacked = GameUtils.getCurrentPlayer() == 1 ? table.getPlayerTwoHero() : table.getPlayerOneHero();
                 if(HeroAttacker.isFrozen()) {
                     outputHeroError("useAttackHero", heroAttackercoordinates, "Attacker card is frozen.", output);
                     break;
@@ -265,28 +266,139 @@ public class CommandFactory {
                     outputHeroError("useAttackHero", heroAttackercoordinates, "Attacker card has already attacked this turn.", output);
                     break;
                 }
-                if(!HeroAttacker.isTank() && table.checkTanksPresent(3 - GameUtils.getCurrentPlayer())) {
+                if(table.checkTanksPresent(3 - GameUtils.getCurrentPlayer())) {
                     outputHeroError("useAttackHero", heroAttackercoordinates, "Attacked card is not of type 'Tank'.", output);
+//                    System.out.println("Hero attacked " + heroAttacked.getName() + " by " + HeroAttacker.getName());
+//                    System.out.println("Attacker coords " + heroAttackercoordinates.getX() + " " + heroAttackercoordinates.getY());
+                    // print whole table with all minions row by row
+                    for(int i = 0; i < table.getTable().size(); i++) {
+                        for(int j = 0; j < table.getTable().get(i).size(); j++) {
+                            System.out.println(table.getTable().get(i).get(j).getName());
+                        }
+                        System.out.println();
+                    }
                     break;
                 }
                 HeroAttacker.setHasAttacked(true);
-                if(GameUtils.getCurrentPlayer() == 1) {
-                    table.getPlayerTwoHero().setHealth(Math.max(0, table.getPlayerTwoHero().getHealth() - HeroAttacker.getAttackDamage()));
-                    if(table.getPlayerTwoHero().getHealth() <= 0) {
+                heroAttacked.setHealth(Math.max(0, heroAttacked.getHealth() - HeroAttacker.getAttackDamage()));
+                if(heroAttacked.getHealth() <= 0) {
+                    GameUtils.setNrGamesSoFar(GameUtils.getNrGamesSoFar() + 1);
+                    if(GameUtils.getCurrentPlayer() == 1) {
                         GameUtils.setPlayerOneWins(GameUtils.getPlayerOneWins() + 1);
                         GameUtils.setGameOver(true);
                         ObjectNode newNodeWin = output.addObject();
                         newNodeWin.put("gameEnded", "Player one killed the enemy hero.");
-                    }
-                } else {
-                    table.getPlayerOneHero().setHealth(Math.max(0, table.getPlayerOneHero().getHealth() - HeroAttacker.getAttackDamage()));
-                    if(table.getPlayerOneHero().getHealth() <= 0) {
+                    } else {
                         GameUtils.setPlayerTwoWins(GameUtils.getPlayerTwoWins() + 1);
                         GameUtils.setGameOver(true);
                         ObjectNode newNodeWin = output.addObject();
                         newNodeWin.put("gameEnded", "Player two killed the enemy hero.");
                     }
                 }
+                break;
+            case "useHeroAbility":
+                int rowAffected = action.getAffectedRow();
+                if(rowAffected < 0 || rowAffected >= table.getTable().size()) {
+                    newNode = output.addObject();
+                    newNode.put("command", action.getCommand());
+                    newNode.put("affectedRow", action.getAffectedRow());
+                    newNode.put("error", "Invalid row index.");
+                    break;
+                }
+                Hero hero = GameUtils.getCurrentPlayer() == 1 ? table.getPlayerOneHero() : table.getPlayerTwoHero();
+                int manaPlayer = GameUtils.getCurrentPlayer() == 1 ? GameUtils.getPlayerOneMana() : GameUtils.getPlayerTwoMana();
+                if(manaPlayer < hero.getMana()) {
+                    newNode = output.addObject();
+                    newNode.put("command", action.getCommand());
+                    newNode.put("affectedRow", action.getAffectedRow());
+                    newNode.put("error", "Not enough mana to use hero's ability.");
+                    break;
+                }
+                if(hero.isHasAttacked()) {
+                    newNode = output.addObject();
+                    newNode.put("command", action.getCommand());
+                    newNode.put("affectedRow", action.getAffectedRow());
+                    newNode.put("error", "Hero has already attacked this turn.");
+                    break;
+                }
+                if(hero.getName().equals("Empress Thorina") || hero.getName().equals("Lord Royce")) {
+                    if (GameUtils.getCurrentPlayer() == 1 && rowAffected != 0 && rowAffected != 1 ||
+                            GameUtils.getCurrentPlayer() == 2 && rowAffected != 2 && rowAffected != 3) {
+                        newNode = output.addObject();
+                        newNode.put("command", action.getCommand());
+                        newNode.put("affectedRow", action.getAffectedRow());
+                        newNode.put("error", "Selected row does not belong to the enemy.");
+                        break;
+                    }
+                } else if(hero.getName().equals("General Kocioraw") || hero.getName().equals("King Mudface")) {
+                    if (GameUtils.getCurrentPlayer() == 1 && rowAffected != 2 && rowAffected != 3 ||
+                            GameUtils.getCurrentPlayer() == 2 && rowAffected != 0 && rowAffected != 1) {
+                        newNode = output.addObject();
+                        newNode.put("command", action.getCommand());
+                        newNode.put("affectedRow", action.getAffectedRow());
+                        newNode.put("error", "Selected row does not belong to the current player.");
+                        break;
+                    }
+                }
+                if(GameUtils.getCurrentPlayer() == 1) {
+                    GameUtils.decreaseMana(table.getPlayerOneHero().getMana(), 1);
+                    table.getPlayerOneHero().setHasAttacked(true);
+                } else {
+                    GameUtils.decreaseMana(table.getPlayerTwoHero().getMana(), 2);
+                    table.getPlayerTwoHero().setHasAttacked(true);
+                }
+                switch(hero.getName()) {
+                    case "Empress Thorina":
+                        int maxHealth = -1;
+                        int indexMaxHealth = -1;
+                        for(int i = 0; i < table.getTable().get(rowAffected).size(); i++) {
+                            if(table.getTable().get(rowAffected).get(i).getHealth() > maxHealth) {
+                                maxHealth = table.getTable().get(rowAffected).get(i).getHealth();
+                                indexMaxHealth = i;
+                            }
+                        }
+                        if(indexMaxHealth != -1) {
+                            table.getTable().get(rowAffected).remove(indexMaxHealth);
+                        }
+                        break;
+                    case "Lord Royce":
+                        for(int i = 0; i < table.getTable().get(rowAffected).size(); i++) {
+                            table.getTable().get(rowAffected).get(i).setFrozen(true);
+                        }
+                        break;
+                    case "General Kocioraw":
+                        for(int i = 0; i < table.getTable().get(rowAffected).size(); i++) {
+                            table.getTable().get(rowAffected).get(i).setAttackDamage(table.getTable().get(rowAffected).get(i).getAttackDamage() + 1);
+                        }
+                        break;
+                    case "King Mudface":
+                        for(int i = 0; i < table.getTable().get(rowAffected).size(); i++) {
+                            table.getTable().get(rowAffected).get(i).setHealth(table.getTable().get(rowAffected).get(i).getHealth() + 1);
+                        }
+                        break;
+                }
+                break;
+            case "getFrozenCardsOnTable":
+                newNode = output.addObject();
+                newNode.put("command", action.getCommand());
+                ArrayNode outputArrayFrozen = newNode.putArray("output");
+                table.outputFrozen(table, outputArrayFrozen);
+                break;
+            case "getTotalGamesPlayed":
+                newNode = output.addObject();
+                newNode.put("command", action.getCommand());
+                newNode.put("output", GameUtils.getNrGamesSoFar());
+                break;
+            case "getPlayerOneWins":
+                newNode = output.addObject();
+                newNode.put("command", action.getCommand());
+                newNode.put("output", GameUtils.getPlayerOneWins());
+                break;
+            case "getPlayerTwoWins":
+                newNode = output.addObject();
+                newNode.put("command", action.getCommand());
+                newNode.put("output", GameUtils.getPlayerTwoWins());
+                break;
         }
     }
 
