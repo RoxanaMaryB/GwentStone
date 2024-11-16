@@ -1,9 +1,9 @@
 package cards.minions;
 
-import fileio.*;
-import cards.*;
-public class TheRipper extends Minion{
-    public TheRipper(CardInput cardInput){
+import fileio.CardInput;
+import cards.Minion;
+public class TheRipper extends Minion {
+    public TheRipper(final CardInput cardInput) {
         super(cardInput);
         this.isSpecial = true;
         this.row = 0;

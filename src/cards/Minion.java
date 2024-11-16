@@ -1,10 +1,8 @@
 package cards;
 
-import java.util.ArrayList;
-
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import fileio.*;
+import fileio.CardInput;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,12 +20,17 @@ public class Minion extends Card {
     private boolean isFrozen = false;
     protected int row;
 
-    public Minion(CardInput cardInput) {
+    public Minion(final CardInput cardInput) {
         super(cardInput);
         this.setAttackDamage(cardInput.getAttackDamage());
     }
 
-    public static void outputMinion(Minion minion, ObjectNode outputNode) {
+    /**
+     * Method to output the minion's attributes to a JSON object
+     * @param minion Minion to output
+     * @param outputNode JSON object to output to
+     */
+    public static void outputMinion(final Minion minion, final ObjectNode outputNode) {
         outputNode.put("mana", minion.getMana());
         outputNode.put("attackDamage", minion.getAttackDamage());
         outputNode.put("health", minion.getHealth());

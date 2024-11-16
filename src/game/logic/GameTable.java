@@ -2,47 +2,57 @@ package game.logic;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-
 import java.util.ArrayList;
+import cards.Minion;
+import cards.Hero;
+import cards.Deck;
 
-import cards.*;
-
-public class GameTable {
+public final class GameTable {
     // create table of 4x5
     private final int rows = 4;
     private final int columns = 5;
-    protected ArrayList<ArrayList<Minion>> table;
+    private ArrayList<ArrayList<Minion>> table;
 
-    protected Deck playerOneDeck;
-    protected Deck playerTwoDeck;
+    private Deck playerOneDeck;
+    private Deck playerTwoDeck;
 
-    protected ArrayList<Minion> playerOneHand = new ArrayList<>();
-    protected ArrayList<Minion> playerTwoHand = new ArrayList<>();
+    private ArrayList<Minion> playerOneHand = new ArrayList<>();
+    private ArrayList<Minion> playerTwoHand = new ArrayList<>();
 
     private Hero playerOneHero;
     private Hero playerTwoHero;
 
     public GameTable() {
         table = new ArrayList<>(rows);
-        for(int i = 0; i < rows; i++) {
+        for (int i = 0; i < rows; i++) {
             ArrayList<Minion> row = new ArrayList<>(columns);
             table.add(row);
         }
     }
 
-    public static void outputHand(ArrayList<Minion> hand, ArrayNode outputNode) {
+    /**
+     * Outputs every minion in an array of minions
+     * @param hand
+     * @param outputNode
+     */
+    public static void outputHand(final ArrayList<Minion> hand, final ArrayNode outputNode) {
         for (Minion minion : hand) {
             ObjectNode minionNode = outputNode.addObject();
             Minion.outputMinion(minion, minionNode);
         }
     }
 
-    public static void outputTable(ArrayList<ArrayList<Minion>> table, ArrayNode outputNode) {
+    /**
+     * Outputs the table of minions
+     * @param table
+     * @param outputNode
+     */
+    public static void outputTable(final ArrayList<ArrayList<Minion>> table,
+                                   final ArrayNode outputNode) {
         for (ArrayList<Minion> row : table) {
             ArrayNode rowNode = outputNode.addArray();
             for (Minion minion : row) {
-                if(minion == null) {
+                if (minion == null) {
                     rowNode.addNull();
                 } else {
                     ObjectNode minionNode = rowNode.addObject();
@@ -52,58 +62,84 @@ public class GameTable {
         }
     }
 
-    public void addMinionToHand(int playerIdx) {
-        if(playerIdx == 1 && !playerOneDeck.getMinions().isEmpty()) {
+    /**
+     * Adds minion from deck to hand of player with index playerIdx at the beginning of the game
+     * @param playerIdx
+     */
+    public void addMinionToHand(final int playerIdx) {
+        if (playerIdx == 1 && !playerOneDeck.getMinions().isEmpty()) {
             playerOneHand.add(playerOneDeck.getMinions().get(0));
             playerOneDeck.getMinions().remove(0);
-        } else if(playerIdx == 2 && !playerTwoDeck.getMinions().isEmpty()) {
+        } else if (playerIdx == 2 && !playerTwoDeck.getMinions().isEmpty()) {
             playerTwoHand.add(playerTwoDeck.getMinions().get(0));
             playerTwoDeck.getMinions().remove(0);
         }
     }
 
-    public boolean checkFullRow(int row) {
-        if(table.get(row).size() >= 5)
+    /**
+     * Checks if the row is full
+     * @param row
+     * @return
+     */
+    public boolean checkFullRow(final int row) {
+        if (table.get(row).size() > rows) {
             return true;
+        }
         return false;
     }
 
-    public void defrostMinions(int player) {
-        int playerRow = player == 1 ? 2 : 0; // daca e player 1, defrost r 2 si 3, daca e player 2, defrost r 0 si 1
-        for(int i = playerRow; i <= playerRow + 1; i++) {
-            for(int j = 0; j < table.get(i).size(); j++) {
-                if(table.get(i).get(j) != null) {
+    /**
+     * Defrosts the minions of a player
+     * @param player
+     */
+    public void defrostMinions(final int player) {
+        int playerRow = player == 1 ? 2 : 0;
+        for (int i = playerRow; i <= playerRow + 1; i++) {
+            for (int j = 0; j < table.get(i).size(); j++) {
+                if (table.get(i).get(j) != null) {
                     table.get(i).get(j).setFrozen(false);
                 }
             }
         }
     }
 
-    public void outputFrozen(GameTable table, ArrayNode outputNode) {
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < table.getTable().get(i).size(); j++) {
-                if(table.getTable().get(i).get(j) != null && table.getTable().get(i).get(j).isFrozen()) {
+    /**
+     * Outputs the frozen minions of a player
+     * @param outputNode
+     */
+    public void outputFrozen(final ArrayNode outputNode) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < table.get(i).size(); j++) {
+                if (table.get(i).get(j) != null && table.get(i).get(j).isFrozen()) {
                     ObjectNode minionNode = outputNode.addObject();
-                    Minion.outputMinion(table.getTable().get(i).get(j), minionNode);
+                    Minion.outputMinion(table.get(i).get(j), minionNode);
                 }
             }
         }
     }
 
+    /**
+     * Resets the hasAttacked attribute of all minions at the end of round
+     */
     public void resetMinions() {
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < table.get(i).size(); j++) {
-                if(table.get(i).get(j) != null) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < table.get(i).size(); j++) {
+                if (table.get(i).get(j) != null) {
                     table.get(i).get(j).setHasAttacked(false);
                 }
             }
         }
     }
 
-    public boolean checkTanksPresent(int player) {
+    /**
+     * Checks if there are tanks present on the side of a player
+     * @param player
+     * @return
+     */
+    public boolean checkTanksPresent(final int player) {
         int frontRow = player == 1 ? 2 : 1;
-        for(int j = 0; j < table.get(frontRow).size(); j++) {
-            if(table.get(frontRow).get(j) != null && table.get(frontRow).get(j).isTank()) {
+        for (int j = 0; j < table.get(frontRow).size(); j++) {
+            if (table.get(frontRow).get(j) != null && table.get(frontRow).get(j).isTank()) {
                 System.out.println("Tank present " + table.get(frontRow).get(j).getName());
                 return true;
             }
@@ -115,7 +151,7 @@ public class GameTable {
         return playerOneDeck;
     }
 
-    public void setPlayerOneDeck(Deck playerOneDeck) {
+    public void setPlayerOneDeck(final Deck playerOneDeck) {
         this.playerOneDeck = playerOneDeck;
     }
 
@@ -123,7 +159,7 @@ public class GameTable {
         return playerTwoDeck;
     }
 
-    public void setPlayerTwoDeck(Deck playerTwoDeck) {
+    public void setPlayerTwoDeck(final Deck playerTwoDeck) {
         this.playerTwoDeck = playerTwoDeck;
     }
 
@@ -131,7 +167,7 @@ public class GameTable {
         return playerOneHero;
     }
 
-    public void setPlayerOneHero(Hero playerOneHero) {
+    public void setPlayerOneHero(final Hero playerOneHero) {
         this.playerOneHero = playerOneHero;
     }
 
@@ -139,7 +175,7 @@ public class GameTable {
         return playerTwoHero;
     }
 
-    public void setPlayerTwoHero(Hero playerTwoHero) {
+    public void setPlayerTwoHero(final Hero playerTwoHero) {
         this.playerTwoHero = playerTwoHero;
     }
 
@@ -147,7 +183,7 @@ public class GameTable {
         return playerOneHand;
     }
 
-    public void setPlayerOneHand(ArrayList<Minion> playerOneHand) {
+    public void setPlayerOneHand(final ArrayList<Minion> playerOneHand) {
         this.playerOneHand = playerOneHand;
     }
 
@@ -155,7 +191,7 @@ public class GameTable {
         return playerTwoHand;
     }
 
-    public void setPlayerTwoHand(ArrayList<Minion> playerTwoHand) {
+    public void setPlayerTwoHand(final ArrayList<Minion> playerTwoHand) {
         this.playerTwoHand = playerTwoHand;
     }
 
@@ -163,7 +199,7 @@ public class GameTable {
         return table;
     }
 
-    public void setTable(ArrayList<ArrayList<Minion>> table) {
+    public void setTable(final ArrayList<ArrayList<Minion>> table) {
         this.table = table;
     }
 }

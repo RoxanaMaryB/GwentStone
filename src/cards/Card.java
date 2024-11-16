@@ -1,8 +1,6 @@
 package cards;
 
-import fileio.*;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import fileio.CardInput;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +17,7 @@ public class Card {
 
     private boolean hasAttacked;
 
-    public Card(CardInput cardInput) {
+    public Card(final CardInput cardInput) {
         this.mana = cardInput.getMana();
         this.attackDamage = cardInput.getAttackDamage();
         this.health = cardInput.getHealth();

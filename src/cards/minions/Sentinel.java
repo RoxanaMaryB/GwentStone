@@ -1,10 +1,9 @@
 package cards.minions;
 
-import fileio.*;
-import cards.*;
-
+import fileio.CardInput;
+import cards.Minion;
 public class Sentinel extends Minion {
-    public Sentinel(CardInput cardInput) {
+    public Sentinel(final CardInput cardInput) {
         super(cardInput);
         this.row = 1;
     }

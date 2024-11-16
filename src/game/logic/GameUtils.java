@@ -1,6 +1,6 @@
 package game.logic;
 
-public class GameUtils {
+public final class GameUtils {
 
     private static int playerOneDeckIdx;
     private static int playerTwoDeckIdx;
@@ -18,15 +18,30 @@ public class GameUtils {
     private static int playerOneWins;
     private static int playerTwoWins;
 
-    public static void increaseMana(int mana, int playerIdx) {
+    private static final int MAX_MANA = 10;
+
+    private GameUtils() {
+    }
+
+    /**
+     * Increase the mana of the player with the given amount.
+     * @param mana
+     * @param playerIdx
+     */
+    public static void increaseMana(final int mana, final int playerIdx) {
         if (playerIdx == 1) {
-            setPlayerOneMana(Math.min(mana, 10) + getPlayerOneMana());
+            setPlayerOneMana(Math.min(mana, MAX_MANA) + getPlayerOneMana());
         } else {
-            setPlayerTwoMana(Math.min(mana, 10) + getPlayerTwoMana());
+            setPlayerTwoMana(Math.min(mana, MAX_MANA) + getPlayerTwoMana());
         }
     }
 
-    public static void decreaseMana(int mana, int playerIdx) {
+    /**
+     * Decrease the mana of the player with the given amount.
+     * @param mana
+     * @param playerIdx
+     */
+    public static void decreaseMana(final int mana, final int playerIdx) {
         if (playerIdx == 1) {
             setPlayerOneMana(getPlayerOneMana() - mana);
         } else {
@@ -38,7 +53,7 @@ public class GameUtils {
         return playerOneDeckIdx;
     }
 
-    public static void setPlayerOneDeckIdx(int playerOneDeckIdx) {
+    public static void setPlayerOneDeckIdx(final int playerOneDeckIdx) {
         GameUtils.playerOneDeckIdx = playerOneDeckIdx;
     }
 
@@ -46,7 +61,7 @@ public class GameUtils {
         return playerTwoDeckIdx;
     }
 
-    public static void setPlayerTwoDeckIdx(int playerTwoDeckIdx) {
+    public static void setPlayerTwoDeckIdx(final int playerTwoDeckIdx) {
         GameUtils.playerTwoDeckIdx = playerTwoDeckIdx;
     }
 
@@ -54,7 +69,7 @@ public class GameUtils {
         return shuffleSeed;
     }
 
-    public static void setShuffleSeed(int shuffleSeed) {
+    public static void setShuffleSeed(final int shuffleSeed) {
         GameUtils.shuffleSeed = shuffleSeed;
     }
 
@@ -62,7 +77,7 @@ public class GameUtils {
         return currentPlayer;
     }
 
-    public static void setCurrentPlayer(int currentPlayer) {
+    public static void setCurrentPlayer(final int currentPlayer) {
         GameUtils.currentPlayer = currentPlayer;
     }
 
@@ -70,7 +85,7 @@ public class GameUtils {
         return nrGames;
     }
 
-    public static void setNrGames(int nrGames) {
+    public static void setNrGames(final int nrGames) {
         GameUtils.nrGames = nrGames;
     }
 
@@ -78,7 +93,7 @@ public class GameUtils {
         return nrGamesSoFar;
     }
 
-    public static void setNrGamesSoFar(int nrGamesSoFar) {
+    public static void setNrGamesSoFar(final int nrGamesSoFar) {
         GameUtils.nrGamesSoFar = nrGamesSoFar;
     }
 
@@ -86,7 +101,7 @@ public class GameUtils {
         return gameOver;
     }
 
-    public static void setGameOver(boolean gameOver) {
+    public static void setGameOver(final boolean gameOver) {
         GameUtils.gameOver = gameOver;
     }
 
@@ -94,7 +109,7 @@ public class GameUtils {
         return playerOneWins;
     }
 
-    public static void setPlayerOneWins(int playerOneWins) {
+    public static void setPlayerOneWins(final int playerOneWins) {
         GameUtils.playerOneWins = playerOneWins;
     }
 
@@ -102,7 +117,7 @@ public class GameUtils {
         return playerTwoWins;
     }
 
-    public static void setPlayerTwoWins(int playerTwoWins) {
+    public static void setPlayerTwoWins(final int playerTwoWins) {
         GameUtils.playerTwoWins = playerTwoWins;
     }
 
@@ -110,7 +125,7 @@ public class GameUtils {
         return nrTurn;
     }
 
-    public static void setNrTurn(int nrTurn) {
+    public static void setNrTurn(final int nrTurn) {
         GameUtils.nrTurn = nrTurn;
     }
 
@@ -118,7 +133,7 @@ public class GameUtils {
         return playerOneMana;
     }
 
-    public static void setPlayerOneMana(int playerOneMana) {
+    public static void setPlayerOneMana(final int playerOneMana) {
         GameUtils.playerOneMana = playerOneMana;
     }
 
@@ -126,7 +141,7 @@ public class GameUtils {
         return playerTwoMana;
     }
 
-    public static void setPlayerTwoMana(int playerTwoMana) {
+    public static void setPlayerTwoMana(final int playerTwoMana) {
         GameUtils.playerTwoMana = playerTwoMana;
     }
 }

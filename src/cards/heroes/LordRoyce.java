@@ -1,10 +1,10 @@
 package cards.heroes;
 
-import cards.*;
+import cards.Hero;
 import fileio.CardInput;
 
-public class LordRoyce extends Hero{
-    public LordRoyce(CardInput cardInput){
+public class LordRoyce extends Hero {
+    public LordRoyce(final CardInput cardInput) {
         super(cardInput);
     }
 }

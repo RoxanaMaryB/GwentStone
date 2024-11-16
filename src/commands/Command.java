@@ -1,11 +1,8 @@
 package commands;
 
-import fileio.*;
-import game.logic.*;
-
+import fileio.ActionsInput;
+import game.logic.GameTable;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,9 +12,12 @@ public class Command {
     private GameTable table;
     private ArrayNode output;
 
-    public Command(ActionsInput action, GameTable table, ArrayNode output) {
+    public Command(final ActionsInput action, final GameTable table, final ArrayNode output) {
         this.setAction(action);
         this.setTable(table);
         this.setOutput(output);
+        CommandContext.getInstance().setAction(action);
+        CommandContext.getInstance().setTable(table);
+        CommandContext.getInstance().setOutput(output);
     }
 }

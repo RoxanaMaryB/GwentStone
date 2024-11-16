@@ -1,12 +1,32 @@
 package cards;
 
-import fileio.*;
-import cards.minions.*;
-import cards.heroes.*;
+import fileio.CardInput;
+import cards.minions.Sentinel;
+import cards.minions.Berserker;
+import cards.minions.Goliath;
+import cards.minions.Warden;
+import cards.minions.TheRipper;
+import cards.minions.Miraj;
+import cards.minions.TheCursedOne;
+import cards.minions.Disciple;
+import cards.heroes.LordRoyce;
+import cards.heroes.EmpressThorina;
+import cards.heroes.KingMudface;
+import cards.heroes.GeneralKocioraw;
 
-public class CardFactory {
+/**
+ * Factory class for creating card objects
+ */
+public final class CardFactory {
 
-    public static Card createCard(CardInput cardInput) {
+    private CardFactory() { }
+
+    /**
+     * Creates a card object based on the card name
+     * @param cardInput the card input
+     * @return the card object
+     */
+    public static Card createCard(final CardInput cardInput) {
         String cardName = cardInput.getName();
         switch (cardName) {
             case "Sentinel":
