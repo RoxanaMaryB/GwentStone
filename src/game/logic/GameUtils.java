@@ -32,7 +32,7 @@ public final class GameUtils {
         if (playerIdx == 1) {
             setPlayerOneMana(Math.min(mana, MAX_MANA) + getPlayerOneMana());
         } else {
-            setPlayerTwoMana(Math.min(mana, MAX_MANA + getPlayerTwoMana());
+            setPlayerTwoMana(Math.min(mana, MAX_MANA) + getPlayerTwoMana());
         }
     }
 
