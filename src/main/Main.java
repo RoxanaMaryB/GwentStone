@@ -6,8 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import checker.CheckerConstants;
-import fileio.Input;
 
+import fileio.Input;
+import game.logic.Game;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -87,6 +88,10 @@ public final class Main {
          * output.add(objectNode);
          *
          */
+
+        // Implementing the game logic
+        Game game = new Game();
+        game.startGame(inputData, output, objectMapper);
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);
