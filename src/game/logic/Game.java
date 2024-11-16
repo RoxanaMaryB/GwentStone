@@ -78,11 +78,11 @@ public final class Game {
             table.addMinionToHand(1);
             table.addMinionToHand(2);
 
-            CommandOrganizer commandFactory = new CommandOrganizer();
+            CommandOrganizer commandOrganizer = new CommandOrganizer();
             ArrayList<ActionsInput> actions = game.getActions();
             for (ActionsInput action : actions) {
                 Command command = new Command(action, table, output);
-                commandFactory.executeCommand(command);
+                commandOrganizer.executeCommand(command);
             }
         }
     }

@@ -82,7 +82,7 @@ public final class GameTable {
      * @return
      */
     public boolean checkFullRow(final int row) {
-        if (table.get(row).size() > rows) {
+        if (table.get(row).size() >= columns) {
             return true;
         }
         return false;
