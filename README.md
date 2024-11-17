@@ -29,6 +29,39 @@ The game is a 1v1 card game where each player has a shuffled deck of cards.
 - The game ends when a player's hero has 0 health.
 - The player with the hero still alive wins the game.
 
+### Commands
+- `placeCard <handIdx>`: Play a card from the player's hand.
+- `cardUsesAttack <cardAttacker> <cardAttacked>` : The cardAttacker attacks the cardAttacked.
+- `cardUsesAbility <cardAttacker> <cardAttacked>` : The cardAttacker uses its ability on the cardAttacked.
+- `useAttackHero <cardAttacker>` : The cardAttacker attacks the opponent's hero.
+- `useHeroAbility <affectedRow>`: The hero uses its ability on the affectedRow.
+- `endTurn`: End the player's turn.
+- `getCardsInHand <playerIdx>`: Print the cards in the player's hand.
+- `getPlayerDeck <playerIdx>`: Print the cards in the player's deck.
+- `getCardsOnTable`: Print the cards on the table.
+- `getPlayerTurn` : Print which player's turn it is.
+- `getPlayerHero <playerIdx>`: Print the player's hero.
+- `getCardAtPosition <x> <y>`: Print the card at the position (x, y) on the game table.
+- `getPlayerMana <playerIdx>`: Print the player's mana.
+- `getFrozenCardsOnTable`: Print the frozen cards on the table.
+- `getTotalGamesPlayed`: Print the total number of games played.
+- `getPlayerOneWins` / `getPlayerTwoWins` : Print how many games player one / two has won.
 
 ## Class Diagram
 ![Class Diagram](diagram.png)
+
+### Design Pattern and Commands
+- I used the Singleton pattern for handling the commands.
+The `CommandContext` class uses the Singleton pattern to ensure that there is only one instance
+of the class, provides a global point of access to it and prevents conflicts.
+- There are two types of commands: `DebugCommand` and `ActionCommand`.
+Each of them has static methods that are called by the `CommandOrganizer` class.
+- The `CommandConext` class encapsulates the attributes of a command: action, table and output.
+
+### Creating cards
+- The `Card` class is the parent class of `Minion` and `Hero`.
+- Cards are created in the CardFactory class using **Upcasting**.
+- The CardFactory class is called from the Game class to create Heros using **Downcasting** and
+from the Deck class to create Minions, since a deck can only have minions.
+- Classes `Minion` and `Hero` have multiple child classes that inherit from them, each with
+specific attributes.

@@ -8,7 +8,6 @@ import cards.Hero;
 import cards.Deck;
 
 public final class GameTable {
-    // create table of 4x5
     private final int rows = 4;
     private final int columns = 5;
     private ArrayList<ArrayList<Minion>> table;
@@ -140,7 +139,6 @@ public final class GameTable {
         int frontRow = player == 1 ? 2 : 1;
         for (int j = 0; j < table.get(frontRow).size(); j++) {
             if (table.get(frontRow).get(j) != null && table.get(frontRow).get(j).isTank()) {
-                System.out.println("Tank present " + table.get(frontRow).get(j).getName());
                 return true;
             }
         }

@@ -212,7 +212,6 @@ public class ActionCommand extends Command {
                 .get(attackerCoordinates.getY());
         Minion attacked = table.getTable().get(attackedCoordinates.getX())
                 .get(attackedCoordinates.getY());
-        // attacker is player 1, attacked is player 2 => row attacked is 0 or 1
         if (!attackEnemy(GameUtils.getCurrentPlayer(), attackedCoordinates.getX())) {
             outputError("cardUsesAttack", attackerCoordinates, attackedCoordinates,
                     "Attacked card does not belong to the enemy.", output);
@@ -364,12 +363,6 @@ public class ActionCommand extends Command {
         if (table.checkTanksPresent(CHANGE_PLAYER - GameUtils.getCurrentPlayer())) {
             outputHeroError("useAttackHero", heroAttackerCoordinates,
                     "Attacked card is not of type 'Tank'.", output);
-            for (int i = 0; i < table.getTable().size(); i++) {
-                for (int j = 0; j < table.getTable().get(i).size(); j++) {
-                    System.out.println(table.getTable().get(i).get(j).getName());
-                }
-                System.out.println();
-            }
             return;
         }
         heroAttacker.setHasAttacked(true);

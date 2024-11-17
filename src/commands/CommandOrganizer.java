@@ -15,7 +15,6 @@ public final class CommandOrganizer {
      * @param command
      */
     public void executeCommand(final Command command) {
-        CommandContext context = CommandContext.getInstance();
         ActionsInput action = command.getAction();
         GameTable table = command.getTable();
         ArrayNode output = command.getOutput();
